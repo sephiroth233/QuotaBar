@@ -60,6 +60,7 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .padding()
         .frame(width: 520, height: 590)
+        .background(SettingsWindowMarker().frame(width: 0, height: 0))
     }
 }
 

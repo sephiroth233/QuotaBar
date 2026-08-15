@@ -3,6 +3,7 @@ import SwiftUI
 
 struct QuotaPopoverView: View {
     @ObservedObject var store: QuotaStore
+    @Environment(\.openSettings) private var openSettings
 
     var body: some View {
         VStack(spacing: 14) {
@@ -66,7 +67,10 @@ struct QuotaPopoverView: View {
 
             Spacer()
 
-            SettingsLink {
+            Button {
+                openSettings()
+                SettingsWindowPresenter.bringToFrontWhenAvailable()
+            } label: {
                 Label("设置", systemImage: "gearshape")
             }
             .buttonStyle(.borderless)
