@@ -4,12 +4,13 @@ import SwiftUI
 struct QuotaPopoverView: View {
     @ObservedObject var store: QuotaStore
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 12) {
             header
 
-            VStack(spacing: 10) {
+            VStack(spacing: 9) {
                 ForEach(store.orderedProviderIDs) { provider in
                     ProviderCardView(
                         provider: provider,
@@ -23,25 +24,33 @@ struct QuotaPopoverView: View {
             footer
         }
         .padding(14)
-        .frame(width: 380)
-        .background(.regularMaterial)
+        .frame(width: 392)
+        .background {
+            ZStack {
+                Rectangle().fill(.regularMaterial)
+                Rectangle()
+                    .fill(Color(nsColor: .windowBackgroundColor))
+                    .opacity(colorScheme == .dark ? 0.70 : 0.80)
+            }
+        }
     }
 
     private var header: some View {
         HStack(spacing: 10) {
             ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(.primary.opacity(0.08))
-                Image(systemName: "gauge")
-                    .font(.system(size: 18, weight: .semibold))
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    .fill(.primary.opacity(colorScheme == .dark ? 0.12 : 0.07))
+                Image(systemName: "chart.bar.fill")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.primary)
             }
-            .frame(width: 36, height: 36)
+            .frame(width: 34, height: 34)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("QuotaBar")
-                    .font(.headline)
+                    .font(.system(size: 15, weight: .semibold))
                 Text(refreshDescription)
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
@@ -51,9 +60,12 @@ struct QuotaPopoverView: View {
                 Task { await store.refresh() }
             } label: {
                 Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 13, weight: .semibold))
                     .rotationEffect(.degrees(store.isRefreshing ? 180 : 0))
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.plain)
+            .padding(7)
+            .background(.primary.opacity(0.055), in: Circle())
             .disabled(store.isRefreshing)
             .help("刷新全部渠道")
         }
@@ -61,9 +73,14 @@ struct QuotaPopoverView: View {
 
     private var footer: some View {
         HStack {
-            Label(overallStatusText, systemImage: "circle.fill")
-                .font(.caption)
-                .foregroundStyle(QuotaTheme.color(for: store.overallHealth))
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(QuotaTheme.color(for: store.overallHealth))
+                    .frame(width: 7, height: 7)
+                Text(overallStatusText)
+                    .foregroundStyle(.secondary)
+            }
+            .font(.caption.weight(.medium))
 
             Spacer()
 
@@ -73,7 +90,7 @@ struct QuotaPopoverView: View {
             } label: {
                 Label("设置", systemImage: "gearshape")
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.plain)
 
             Divider()
                 .frame(height: 14)
@@ -81,8 +98,9 @@ struct QuotaPopoverView: View {
             Button("退出") {
                 NSApplication.shared.terminate(nil)
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.plain)
         }
+        .foregroundStyle(.primary)
     }
 
     private var refreshDescription: String {

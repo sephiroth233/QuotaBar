@@ -60,16 +60,7 @@ final class QuotaStore: ObservableObject {
     }
 
     var menuBarSymbolName: String {
-        if snapshots[.codex]?.progress != nil {
-            return ProviderID.codex.symbolName
-        }
-        if snapshots[.openRouter] != nil {
-            return ProviderID.openRouter.symbolName
-        }
-        if snapshots[.deepSeek] != nil {
-            return ProviderID.deepSeek.symbolName
-        }
-        return "gauge"
+        "chart.bar.fill"
     }
 
     var overallHealth: ProviderHealth {

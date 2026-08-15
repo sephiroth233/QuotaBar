@@ -22,6 +22,14 @@ enum ProviderID: String, CaseIterable, Codable, Hashable, Identifiable, Sendable
         case .deepSeek: "wave.3.right.circle"
         }
     }
+
+    var brandAssetName: String {
+        switch self {
+        case .codex: "OpenAI"
+        case .openRouter: "OpenRouter"
+        case .deepSeek: "DeepSeek"
+        }
+    }
 }
 
 enum ProviderHealth: String, Codable, Hashable, Sendable {

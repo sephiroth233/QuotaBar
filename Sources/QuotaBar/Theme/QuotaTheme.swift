@@ -21,18 +21,30 @@ enum QuotaTheme {
 
 struct GlassCardModifier: ViewModifier {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         content
             .padding(14)
             .background {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(reduceTransparency ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor)) : AnyShapeStyle(.ultraThinMaterial))
+                    .fill(cardFill)
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(.primary.opacity(0.08), lineWidth: 0.75)
+                    .strokeBorder(.primary.opacity(colorScheme == .dark ? 0.14 : 0.09), lineWidth: 0.75)
             }
+            .shadow(color: .black.opacity(colorScheme == .dark ? 0.14 : 0.045), radius: 5, y: 2)
+    }
+
+    private var cardFill: Color {
+        if reduceTransparency {
+            return Color(nsColor: .controlBackgroundColor)
+        }
+        if colorScheme == .dark {
+            return Color(nsColor: .controlBackgroundColor).opacity(0.90)
+        }
+        return Color.white.opacity(0.84)
     }
 }
 

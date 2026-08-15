@@ -11,6 +11,7 @@ stage_root="$(mktemp -d "${TMPDIR:-/private/tmp}/quotabar-package.XXXXXX")"
 stage_bundle="$stage_root/QuotaBar.app"
 contents_root="$stage_bundle/Contents"
 binary_root="$contents_root/MacOS"
+resources_root="$contents_root/Resources"
 
 trap 'rm -rf "$stage_root"' EXIT
 
@@ -40,6 +41,11 @@ bin_root="$(env "${build_environment[@]}" swift build \
 
 mkdir -p "$binary_root"
 cp "$bin_root/QuotaBar" "$binary_root/QuotaBar"
+resource_bundle="$bin_root/QuotaBar_QuotaBar.bundle"
+if [[ -d "$resource_bundle" ]]; then
+    mkdir -p "$resources_root"
+    cp -R "$resource_bundle" "$resources_root/"
+fi
 cp "Support/Info.plist" "$contents_root/Info.plist"
 xattr -cr "$stage_bundle"
 codesign --force --deep --sign - "$stage_bundle"
