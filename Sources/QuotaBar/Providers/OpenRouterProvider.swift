@@ -3,17 +3,17 @@ import Foundation
 struct OpenRouterProvider: QuotaProvider {
     let id = ProviderID.openRouter
 
-    private let keychain: KeychainStore
+    private let credentialStore: LocalCredentialStore
     private let client: SecureHTTPClient
 
-    init(keychain: KeychainStore, client: SecureHTTPClient) {
-        self.keychain = keychain
+    init(credentialStore: LocalCredentialStore, client: SecureHTTPClient) {
+        self.credentialStore = credentialStore
         self.client = client
     }
 
     func fetchSnapshot() async throws -> ProviderSnapshot {
-        let apiKey = try keychain.read(.openRouterAPIKey)
-        let managementKey = try keychain.read(.openRouterManagementKey)
+        let apiKey = try credentialStore.read(.openRouterAPIKey)
+        let managementKey = try credentialStore.read(.openRouterManagementKey)
 
         guard apiKey != nil || managementKey != nil else {
             throw ProviderError.missingCredential("OpenRouter API Key")

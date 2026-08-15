@@ -7,19 +7,19 @@ final class QuotaStore: ObservableObject {
     @Published private(set) var isRefreshing = false
     @Published private(set) var lastRefresh: Date?
 
-    let keychain: KeychainStore
+    let credentialStore: LocalCredentialStore
 
     private let providers: [any QuotaProvider]
     private var refreshLoop: Task<Void, Never>?
 
     init() {
-        let keychain = KeychainStore()
+        let credentialStore = LocalCredentialStore()
         let client = SecureHTTPClient()
-        self.keychain = keychain
+        self.credentialStore = credentialStore
         providers = [
             CodexProvider(authReader: CodexAuthContextReader(), client: client),
-            OpenRouterProvider(keychain: keychain, client: client),
-            DeepSeekProvider(keychain: keychain, client: client)
+            OpenRouterProvider(credentialStore: credentialStore, client: client),
+            DeepSeekProvider(credentialStore: credentialStore, client: client)
         ]
 
         refreshLoop = Task { [weak self] in
@@ -97,16 +97,16 @@ final class QuotaStore: ObservableObject {
     }
 
     func credentialIsConfigured(_ account: SecretAccount) -> Bool {
-        keychain.contains(account)
+        credentialStore.contains(account)
     }
 
     func saveCredential(_ value: String, for account: SecretAccount) throws {
-        try keychain.save(value, for: account)
+        try credentialStore.save(value, for: account)
         Task { await refresh() }
     }
 
     func deleteCredential(_ account: SecretAccount) throws {
-        try keychain.delete(account)
+        try credentialStore.delete(account)
         Task { await refresh() }
     }
 }

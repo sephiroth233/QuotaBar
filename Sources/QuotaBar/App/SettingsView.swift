@@ -23,6 +23,20 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
+            Section("凭据存储") {
+                LabeledContent("存储位置") {
+                    Text(store.credentialStore.locationDescription)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .help(store.credentialStore.locationDescription)
+                }
+                Text("OpenRouter 和 DeepSeek 密钥保存在仅当前用户可读写的本地文件中，不访问 macOS 钥匙串。此文件为明文，请勿分享或加入 Git。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("OpenRouter") {
                 SecretEditor(
                     title: "API Key",
@@ -59,7 +73,7 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .padding()
-        .frame(width: 520, height: 590)
+        .frame(width: 520, height: 640)
         .background(SettingsWindowMarker().frame(width: 0, height: 0))
     }
 }
@@ -116,7 +130,7 @@ private struct SecretEditor: View {
         do {
             try store.saveCredential(pendingValue, for: account)
             pendingValue = ""
-            feedback = "已安全保存到 macOS 钥匙串。"
+            feedback = "已保存到 QuotaBar 本地凭据文件。"
         } catch {
             feedback = error.localizedDescription
         }
@@ -126,7 +140,7 @@ private struct SecretEditor: View {
         do {
             try store.deleteCredential(account)
             pendingValue = ""
-            feedback = "凭据已从钥匙串清除。"
+            feedback = "已从 QuotaBar 本地凭据文件清除。"
         } catch {
             feedback = error.localizedDescription
         }

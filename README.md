@@ -7,7 +7,7 @@ QuotaBar is a local-first macOS menu bar application for monitoring Codex, OpenR
 - Native SwiftUI `MenuBarExtra` application for macOS 14 or newer.
 - Direct provider connections; no CPA service or private relay is required.
 - Codex reads the active local Codex Desktop/CLI login from `~/.codex/auth.json` without modifying it.
-- DeepSeek and OpenRouter secrets are stored in macOS Keychain.
+- DeepSeek and OpenRouter secrets are stored in a local user-only file without accessing macOS Keychain.
 - System material-based glass appearance with automatic light and dark mode support.
 - Provider failures are isolated so one unavailable channel does not hide the others.
 
@@ -47,4 +47,4 @@ Open the menu bar panel, select **Settings**, and enter:
 - an OpenRouter API key;
 - optionally, an OpenRouter Management Key for account-wide credit balance.
 
-QuotaBar never commits credentials to the repository or stores them in preferences files.
+QuotaBar stores these credentials at `~/Library/Application Support/QuotaBar/credentials.json` with `0600` permissions. The file is plaintext and is never committed to this repository. Existing Keychain values are not imported; enter each key once again after upgrading from a Keychain-based build.

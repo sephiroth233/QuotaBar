@@ -3,16 +3,16 @@ import Foundation
 struct DeepSeekProvider: QuotaProvider {
     let id = ProviderID.deepSeek
 
-    private let keychain: KeychainStore
+    private let credentialStore: LocalCredentialStore
     private let client: SecureHTTPClient
 
-    init(keychain: KeychainStore, client: SecureHTTPClient) {
-        self.keychain = keychain
+    init(credentialStore: LocalCredentialStore, client: SecureHTTPClient) {
+        self.credentialStore = credentialStore
         self.client = client
     }
 
     func fetchSnapshot() async throws -> ProviderSnapshot {
-        guard let apiKey = try keychain.read(.deepSeekAPIKey), !apiKey.isEmpty else {
+        guard let apiKey = try credentialStore.read(.deepSeekAPIKey), !apiKey.isEmpty else {
             throw ProviderError.missingCredential("DeepSeek API Key")
         }
         guard let url = URL(string: "https://api.deepseek.com/user/balance") else {

@@ -18,7 +18,8 @@ QuotaBar separates provider-specific API semantics from the shared menu bar pres
 
 ## Security boundaries
 
-- Secrets use macOS Keychain.
+- OpenRouter and DeepSeek secrets use a local JSON file with `0600` permissions, avoiding macOS Keychain access prompts.
+- The local credentials file is plaintext and must never be logged, committed, or shared.
 - Codex credentials are read for each request and are never copied into QuotaBar storage.
 - Network destinations are exact HTTPS URLs owned by the configured provider.
 - Redirects are rejected.
