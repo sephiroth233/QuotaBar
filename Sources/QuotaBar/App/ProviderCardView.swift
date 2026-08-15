@@ -91,7 +91,7 @@ struct ProviderCardView: View {
                             .frame(width: proxy.size.width * progress.clampedRemainingFraction)
                     }
                 }
-                .frame(height: provider == .codex ? 9 : 5)
+                .frame(height: provider == .codex ? 7 : 5)
             }
             .padding(.top, provider == .codex ? 2 : 0)
         }
