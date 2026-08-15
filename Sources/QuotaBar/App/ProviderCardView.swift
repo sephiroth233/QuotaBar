@@ -15,7 +15,7 @@ struct ProviderCardView: View {
 
                     ProviderBrandIcon(
                         provider: provider,
-                        size: provider == .codex ? 26 : 21
+                        size: provider == .codex ? 18 : 21
                     )
                 }
                 .frame(width: 34, height: 34)

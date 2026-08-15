@@ -25,7 +25,7 @@ enum ProviderID: String, CaseIterable, Codable, Hashable, Identifiable, Sendable
 
     var brandAssetName: String {
         switch self {
-        case .codex: "OpenAI"
+        case .codex: "ChatGPT"
         case .openRouter: "OpenRouter"
         case .deepSeek: "DeepSeek"
         }
