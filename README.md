@@ -35,7 +35,7 @@ Then double-click `dist/QuotaBar.app`. When launched outside an Applications fol
 - `/Applications/QuotaBar.app` when the system Applications directory is writable;
 - otherwise `~/Applications/QuotaBar.app`, without requesting an administrator password.
 
-If the same or a newer build is already installed, the temporary copy opens the installed app instead of overwriting it. A newer build safely replaces an older installed build.
+If the same or a newer build is already installed, the temporary copy opens the installed app instead of overwriting it. The first-launch installer also contains a safe replacement path when a newer temporary build is launched directly; public update delivery will be handled separately from first-time installation.
 
 The initial bundle is intended for local development. Public distribution should use Developer ID signing and notarization.
 
