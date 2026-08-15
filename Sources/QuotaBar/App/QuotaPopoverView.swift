@@ -4,13 +4,14 @@ import SwiftUI
 struct QuotaPopoverView: View {
     @ObservedObject var store: QuotaStore
     @Environment(\.openSettings) private var openSettings
-    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 0) {
             header
 
-            VStack(spacing: 9) {
+            Divider()
+
+            VStack(spacing: 8) {
                 ForEach(store.orderedProviderIDs) { provider in
                     ProviderCardView(
                         provider: provider,
@@ -19,12 +20,11 @@ struct QuotaPopoverView: View {
                     )
                 }
             }
-            .padding(.horizontal, 1)
+            .padding(10)
 
             footer
         }
-        .padding(14)
-        .frame(width: 392)
+        .frame(width: 374)
         .background {
             NativeVisualEffectBackground(material: .popover)
                 .ignoresSafeArea()
@@ -34,17 +34,17 @@ struct QuotaPopoverView: View {
     private var header: some View {
         HStack(spacing: 10) {
             ZStack {
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(.primary.opacity(colorScheme == .dark ? 0.12 : 0.07))
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .fill(.primary.opacity(0.075))
                 Image(systemName: "chart.bar.fill")
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.primary)
             }
-            .frame(width: 34, height: 34)
+            .frame(width: 30, height: 30)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("QuotaBar")
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.system(size: 14, weight: .semibold))
                 Text(refreshDescription)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -55,48 +55,62 @@ struct QuotaPopoverView: View {
             Button {
                 Task { await store.refresh() }
             } label: {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 13, weight: .semibold))
-                    .rotationEffect(.degrees(store.isRefreshing ? 180 : 0))
+                Group {
+                    if store.isRefreshing {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 13, weight: .medium))
+                    }
+                }
+                .frame(width: 24, height: 24)
+                .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
-            .padding(7)
-            .background(.primary.opacity(0.055), in: Circle())
+            .buttonStyle(.borderless)
+            .controlSize(.small)
             .disabled(store.isRefreshing)
             .help("刷新全部渠道")
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
     }
 
     private var footer: some View {
-        HStack {
-            HStack(spacing: 6) {
-                Circle()
-                    .fill(QuotaTheme.color(for: store.overallHealth))
-                    .frame(width: 7, height: 7)
-                Text(overallStatusText)
-                    .foregroundStyle(.secondary)
-            }
-            .font(.caption.weight(.medium))
-
-            Spacer()
-
-            Button {
-                openSettings()
-                SettingsWindowPresenter.bringToFrontWhenAvailable()
-            } label: {
-                Label("设置", systemImage: "gearshape")
-            }
-            .buttonStyle(.plain)
-
+        VStack(spacing: 0) {
             Divider()
-                .frame(height: 14)
 
-            Button("退出") {
-                NSApplication.shared.terminate(nil)
+            HStack(spacing: 10) {
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(QuotaTheme.color(for: store.overallHealth))
+                        .frame(width: 7, height: 7)
+                    Text(overallStatusText)
+                        .foregroundStyle(.secondary)
+                }
+                .font(.caption.weight(.medium))
+
+                Spacer()
+
+                Button {
+                    openSettings()
+                    SettingsWindowPresenter.bringToFrontWhenAvailable()
+                } label: {
+                    Label("设置", systemImage: "gearshape")
+                }
+
+                Divider()
+                    .frame(height: 14)
+
+                Button("退出") {
+                    NSApplication.shared.terminate(nil)
+                }
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderless)
+            .controlSize(.small)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 9)
         }
-        .foregroundStyle(.primary)
     }
 
     private var refreshDescription: String {

@@ -19,37 +19,36 @@ enum QuotaTheme {
     }
 }
 
-struct GlassCardModifier: ViewModifier {
+struct NativeSectionModifier: ViewModifier {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         content
-            .padding(14)
+            .padding(12)
             .background {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(cardFill)
             }
             .overlay {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(.primary.opacity(colorScheme == .dark ? 0.13 : 0.08), lineWidth: 0.75)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(
+                        Color(nsColor: .separatorColor).opacity(colorScheme == .dark ? 0.55 : 0.7),
+                        lineWidth: 0.5
+                    )
             }
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0.08 : 0.025), radius: 3, y: 1)
     }
 
     private var cardFill: Color {
         if reduceTransparency {
             return Color(nsColor: .controlBackgroundColor)
         }
-        if colorScheme == .dark {
-            return Color.white.opacity(0.075)
-        }
-        return Color.white.opacity(0.34)
+        return Color.primary.opacity(colorScheme == .dark ? 0.055 : 0.035)
     }
 }
 
 extension View {
-    func glassCard() -> some View {
-        modifier(GlassCardModifier())
+    func nativeSection() -> some View {
+        modifier(NativeSectionModifier())
     }
 }
