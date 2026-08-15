@@ -27,14 +27,14 @@ struct GlassCardModifier: ViewModifier {
         content
             .padding(14)
             .background {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(cardFill)
             }
             .overlay {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(.primary.opacity(colorScheme == .dark ? 0.14 : 0.09), lineWidth: 0.75)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(.primary.opacity(colorScheme == .dark ? 0.13 : 0.08), lineWidth: 0.75)
             }
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0.14 : 0.045), radius: 5, y: 2)
+            .shadow(color: .black.opacity(colorScheme == .dark ? 0.08 : 0.025), radius: 3, y: 1)
     }
 
     private var cardFill: Color {
@@ -42,9 +42,9 @@ struct GlassCardModifier: ViewModifier {
             return Color(nsColor: .controlBackgroundColor)
         }
         if colorScheme == .dark {
-            return Color(nsColor: .controlBackgroundColor).opacity(0.90)
+            return Color.white.opacity(0.075)
         }
-        return Color.white.opacity(0.84)
+        return Color.white.opacity(0.34)
     }
 }
 

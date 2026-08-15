@@ -26,12 +26,8 @@ struct QuotaPopoverView: View {
         .padding(14)
         .frame(width: 392)
         .background {
-            ZStack {
-                Rectangle().fill(.regularMaterial)
-                Rectangle()
-                    .fill(Color(nsColor: .windowBackgroundColor))
-                    .opacity(colorScheme == .dark ? 0.70 : 0.80)
-            }
+            NativeVisualEffectBackground(material: .popover)
+                .ignoresSafeArea()
         }
     }
 
