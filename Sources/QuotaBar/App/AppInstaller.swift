@@ -99,6 +99,7 @@ enum AppInstaller {
     private static func relaunch(from destinationURL: URL) {
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.activates = false
+        configuration.createsNewApplicationInstance = true
 
         Task { @MainActor in
             do {
