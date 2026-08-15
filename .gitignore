@@ -7,4 +7,6 @@ xcuserdata/
 DerivedData/
 *.xcuserstate
 *.xcworkspace/xcuserdata/
+.idea
+dist
 /Docs
