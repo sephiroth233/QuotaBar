@@ -3,11 +3,16 @@
 set -euo pipefail
 
 project_root="${0:A:h:h}"
-bundle_root="$project_root/dist/QuotaBar.app"
-contents_root="$bundle_root/Contents"
-binary_root="$contents_root/MacOS"
+distribution_root="$project_root/dist"
+bundle_root="$distribution_root/QuotaBar.app"
 build_root="${TMPDIR:-/private/tmp}/quotabar-release-build"
 module_cache="${TMPDIR:-/private/tmp}/quotabar-module-cache"
+stage_root="$(mktemp -d "${TMPDIR:-/private/tmp}/quotabar-package.XXXXXX")"
+stage_bundle="$stage_root/QuotaBar.app"
+contents_root="$stage_bundle/Contents"
+binary_root="$contents_root/MacOS"
+
+trap 'rm -rf "$stage_root"' EXIT
 
 sdk_path="$(xcrun --sdk macosx --show-sdk-path)"
 fallback_sdk="/Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk"
@@ -36,5 +41,14 @@ bin_root="$(env "${build_environment[@]}" swift build \
 mkdir -p "$binary_root"
 cp "$bin_root/QuotaBar" "$binary_root/QuotaBar"
 cp "Support/Info.plist" "$contents_root/Info.plist"
+xattr -cr "$stage_bundle"
+codesign --force --deep --sign - "$stage_bundle"
+
+mkdir -p "$distribution_root"
+if [[ -e "$bundle_root" ]]; then
+    rm -rf "$bundle_root"
+fi
+ditto --noextattr --noqtn "$stage_bundle" "$bundle_root"
+codesign --verify --deep --strict "$bundle_root"
 
 echo "Created $bundle_root"

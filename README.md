@@ -28,8 +28,14 @@ To create a local `.app` bundle:
 
 ```sh
 ./Scripts/package.sh
-open "dist/QuotaBar.app"
 ```
+
+Then double-click `dist/QuotaBar.app`. When launched outside an Applications folder, QuotaBar installs itself automatically and relaunches the installed copy:
+
+- `/Applications/QuotaBar.app` when the system Applications directory is writable;
+- otherwise `~/Applications/QuotaBar.app`, without requesting an administrator password.
+
+If the same or a newer build is already installed, the temporary copy opens the installed app instead of overwriting it. A newer build safely replaces an older installed build.
 
 The initial bundle is intended for local development. Public distribution should use Developer ID signing and notarization.
 
