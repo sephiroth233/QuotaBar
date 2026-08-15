@@ -8,24 +8,21 @@ struct QuotaPopoverView: View {
         VStack(spacing: 14) {
             header
 
-            ScrollView {
-                LazyVStack(spacing: 10) {
-                    ForEach(store.orderedProviderIDs) { provider in
-                        ProviderCardView(
-                            provider: provider,
-                            snapshot: store.snapshots[provider],
-                            errorMessage: store.errors[provider]
-                        )
-                    }
+            VStack(spacing: 10) {
+                ForEach(store.orderedProviderIDs) { provider in
+                    ProviderCardView(
+                        provider: provider,
+                        snapshot: store.snapshots[provider],
+                        errorMessage: store.errors[provider]
+                    )
                 }
-                .padding(.horizontal, 1)
             }
+            .padding(.horizontal, 1)
 
             footer
         }
         .padding(14)
         .frame(width: 380)
-        .frame(maxHeight: 720)
         .background(.regularMaterial)
     }
 

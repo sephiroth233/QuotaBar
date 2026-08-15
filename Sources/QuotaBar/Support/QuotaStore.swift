@@ -44,10 +44,32 @@ final class QuotaStore: ObservableObject {
     }
 
     var menuBarTitle: String {
-        guard let snapshot = snapshots[.codex], let progress = snapshot.progress else {
-            return "--%"
+        if let snapshot = snapshots[.codex], let progress = snapshot.progress {
+            return MetricFormatting.percentage(from: progress.clampedRemainingFraction)
         }
-        return MetricFormatting.percentage(from: progress.clampedRemainingFraction)
+
+        if let snapshot = snapshots[.openRouter] {
+            return snapshot.headline.value
+        }
+
+        if let snapshot = snapshots[.deepSeek] {
+            return snapshot.headline.value
+        }
+
+        return "--"
+    }
+
+    var menuBarSymbolName: String {
+        if snapshots[.codex]?.progress != nil {
+            return ProviderID.codex.symbolName
+        }
+        if snapshots[.openRouter] != nil {
+            return ProviderID.openRouter.symbolName
+        }
+        if snapshots[.deepSeek] != nil {
+            return ProviderID.deepSeek.symbolName
+        }
+        return "gauge"
     }
 
     var overallHealth: ProviderHealth {

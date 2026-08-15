@@ -18,7 +18,7 @@ struct QuotaBarApplication: App {
         MenuBarExtra {
             QuotaPopoverView(store: store)
         } label: {
-            Label(store.menuBarTitle, systemImage: "gauge")
+            Label(store.menuBarTitle, systemImage: store.menuBarSymbolName)
         }
         .menuBarExtraStyle(.window)
 
