@@ -70,15 +70,17 @@ struct ProviderCardView: View {
 
         if let progress = snapshot.progress {
             VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text(progress.label)
-                    Spacer()
-                    Text(MetricFormatting.percentage(from: progress.clampedRemainingFraction))
-                        .fontWeight(.medium)
-                        .monospacedDigit()
+                if provider != .codex {
+                    HStack {
+                        Text(progress.label)
+                        Spacer()
+                        Text(MetricFormatting.percentage(from: progress.clampedRemainingFraction))
+                            .fontWeight(.medium)
+                            .monospacedDigit()
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
 
                 GeometryReader { proxy in
                     ZStack(alignment: .leading) {
@@ -89,8 +91,9 @@ struct ProviderCardView: View {
                             .frame(width: proxy.size.width * progress.clampedRemainingFraction)
                     }
                 }
-                .frame(height: 5)
+                .frame(height: provider == .codex ? 9 : 5)
             }
+            .padding(.top, provider == .codex ? 2 : 0)
         }
 
         VStack(spacing: 0) {
